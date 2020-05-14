@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mycom.campus_book.dao.StudentDao">
+	<select id="queryStudent" resultType="org.mycom.campus_book.entity.Student">
+		SELECT 
+			studentId,
+			password,
+			studentName,
+			grade,
+			depId,
+			emailAddress,
+			phone
+		FROM
+			student
+		WHERE
+			studentId=#{studentId}
+		AND password=#{password}		
+	</select>
+	<update id="updateStudentPassword" parameterType="Long">
+		UPDATE student
+		SET password = #{password}
+		WHERE
+			studentId=#{studentId} 
+	</update>
+	
+	<select id="queryByStudentId" resultType="org.mycom.campus_book.entity.Student">
+		SELECT *
+		FROM student
+		WHERE studentId=#{studentId}
+	</select>
+	<select id="queryByStudentName" resultType="org.mycom.campus_book.entity.Student">
+		SELECT *
+		FROM student
+		WHERE studentName=#{StudentName}
+	</select>
+	<select id="queryAll" resultType="org.mycom.campus_book.entity.Student">
+		SELECT *
+		FROM student
+	</select>
+</mapper>

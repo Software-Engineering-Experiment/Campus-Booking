@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mycom.campus_book.dao.SpareTimeDao">
+	<select id="queryById" parameterType="long" resultType="org.mycom.campus_book.entity.SpareTime">
+		SELECT 
+			id,
+			teacherId,
+			teacherName,
+			startTime,
+			endTime,
+			maxReserved,
+			reserved
+		FROM
+			sparetime
+		WHERE
+			id=#{id}		
+	</select>
+	
+	<select id="queryByTeacherName" resultType="org.mycom.campus_book.entity.SpareTime">
+	SELECT 
+			id,
+			teacherId,
+			teacherName,
+			startTime,
+			endTime,
+			maxReserved,
+			reserved
+		FROM
+			sparetime
+		<where>
+			<!-- <if test="name !=null and !&quot;&quot;.equals(name.trim())">  -->
+				and teacherName like '%' #{teacherName} '%'
+			<!--  </if>   -->
+		</where> 
+	</select>
+	
+	<select id="queryAll" resultType="org.mycom.campus_book.entity.SpareTime">
+		SELECT
+			id,
+			teacherId,
+			teacherName,
+			startTime,
+			endTime,
+			maxReserved,
+			reserved
+		FROM
+			sparetime
+		ORDER BY
+			id
+		LIMIT #{offset}, #{limit}
+	</select>
+	
+	<!--什么时候增加失败？reserved>maxReserved -->
+	<update id="addReserved">
+		UPDATE sparetime
+		SET reserved = reserved + 1
+		WHERE
+			id = #{id} 
+	</update>
+	
+	
+	<update id="reduceReserved">
+		UPDATE sparetime
+		SET reserved = reserved - 1
+		WHERE
+			id = #{id}
+		AND reserved > 0
+	</update>
+	
+	<insert id="addSpareTime">
+    <!-- ignore主键冲突,报错 -->
+    INSERT ignore INTO sparetime( `teacherId`, `teacherName`, `startTime`, `endTime`, `maxReserved`, `reserved`)
+    VALUES( #{teacherId}, #{teacherName}, #{startTime},#{endTime},#{maxReserved},#{reserved})
+ 	 </insert>
+  
+	<delete id="delSpareTimeById" >
+    	DELETE FROM sparetime WHERE id=#{id}
+    </delete>
+    
+    <update id="updateSpareTime" parameterType="org.mycom.campus_book.entity.SpareTime">
+    	UPDATE sparetime
+    	SET teacherId=#{teacherId},
+		teacherName=#{teacherName},
+		startTime=#{startTime},
+		endTime=#{endTime},
+		maxReserved=#{maxReserved},
+		reserved=#{reserved}
+		WHERE
+		id=#{id}			
+    </update>
+	
+
+</mapper>
