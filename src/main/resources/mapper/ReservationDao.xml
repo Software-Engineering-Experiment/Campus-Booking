@@ -34,6 +34,14 @@
     	DELETE FROM reservation WHERE id=#{id} and studentId=#{studentId} 
     </delete>  
     
+    <delete id="deleteRservationByStudentId">
+    	DELETE FROM reservation WHERE studentId=#{studentId} 
+    </delete>  
+    
+    <delete id="deleteReservationById">
+    	DELETE FROM reservation WHERE id=#{id} 
+    </delete>  
+    
     <select id="queryAll" resultType="org.mycom.campus_book.entity.Reservation">
 		SELECT 
 			a.id,<!--mybatis会认为是id,又因为开启了驼峰命名法 所以最终是id -->
@@ -54,6 +62,128 @@
 		LIMIT #{offset}, #{limit}
 	</select> 
 	
+	<select id="queryAllReservation" resultType="org.mycom.campus_book.entity.Reservation">
+		SELECT 
+			a.id,<!--mybatis会认为是id,又因为开启了驼峰命名法 所以最终是id -->
+			a.studentId,
+			a.time,
+			b.id "sparetime.id",
+			b.teacherId "sparetime.teacherId",
+			b.startTime "sparetime.startTime",
+			b.endTime "sparetime.endTime",
+			b.maxReserved "sparetime.maxReserved",
+			b.reserved "sparetime.reserved",
+			c.teacherId "teacher.teacherId",
+			c.teacherName "teacher.teacherName",
+			c.password "teacher.password",
+			c.depId "teacher.depId",
+			c.emailAddress "teacher.emailAddress",
+			c.phone "teacher.phone",
+			c.address "teacher.address",
+			d.studentId "student.studentId",
+			d.studentName "student.studentName"
+		FROM
+			reservation a
+		INNER JOIN sparetime b ON a.id = b.id
+		INNER JOIN teacher c ON b.teacherId = c.teacherId
+		INNER JOIN student d ON a.studentId = d.studentId
+		ORDER BY
+			c.teacherId
+		LIMIT #{offset}, #{limit}
+	</select> 
+	
+	
+	<select id="queryById" resultType="org.mycom.campus_book.entity.Reservation">
+		SELECT 
+			a.id,<!--mybatis会认为是id,又因为开启了驼峰命名法 所以最终是id -->
+			a.studentId,
+			a.time,
+			b.studentId "student.studentId",<!--b.id as "student.id" 告诉mybatis b.id是student中studentid属性的值-->
+			b.password "student.password",
+			b.studentName "student.studentName",
+			b.grade "student.grade",
+			b.depId "student.depId",
+			b.emailaddress "student.emailAddress",
+			b.phone "student.phone"
+		FROM
+			reservation a
+		INNER JOIN student b ON a.studentId = b.studentId
+		WHERE
+			a.id=#{id}
+		ORDER BY
+			a.studentId
+	</select> 	
+	
+	<select id="getIdListByStudentId" resultType="Long">
+		SELECT
+			id
+		FROM
+			reservation
+		WHERE
+		    studentId=#{studentId}
+	</select>
+	
+	<select id="queryReservationByTeacherId" resultType="org.mycom.campus_book.entity.Reservation">
+		SELECT 
+			a.id,<!--mybatis会认为是id,又因为开启了驼峰命名法 所以最终是id -->
+			a.studentId,
+			a.time,
+			b.id "sparetime.id",
+			b.teacherId "sparetime.teacherId",
+			b.startTime "sparetime.startTime",
+			b.endTime "sparetime.endTime",
+			b.maxReserved "sparetime.maxReserved",
+			b.reserved "sparetime.reserved",
+			c.teacherId "teacher.teacherId",
+			c.teacherName "teacher.teacherName",
+			c.password "teacher.password",
+			c.depId "teacher.depId",
+			c.emailAddress "teacher.emailAddress",
+			c.phone "teacher.phone",
+			c.address "teacher.address"
+		FROM
+			reservation a
+		INNER JOIN sparetime b ON a.id = b.id
+		INNER JOIN teacher c ON b.teacherId = c.teacherId
+		<where>
+			c.teacherId=#{teacherId}
+		</where>
+		ORDER BY
+			a.id
+	</select>
+	
+	
+	<select id="queryReservationByTeacherName" resultType="org.mycom.campus_book.entity.Reservation">
+		SELECT 
+			a.id,<!--mybatis会认为是id,又因为开启了驼峰命名法 所以最终是id -->
+			a.studentId,
+			a.time,
+			b.id "sparetime.id",
+			b.teacherId "sparetime.teacherId",
+			b.startTime "sparetime.startTime",
+			b.endTime "sparetime.endTime",
+			b.maxReserved "sparetime.maxReserved",
+			b.reserved "sparetime.reserved",
+			c.teacherId "teacher.teacherId",
+			c.teacherName "teacher.teacherName",
+			c.password "teacher.password",
+			c.depId "teacher.depId",
+			c.emailAddress "teacher.emailAddress",
+			c.phone "teacher.phone",
+			c.address "teacher.address",
+			d.studentId "student.studentId",
+			d.studentName "student.studentName"
+		FROM
+			reservation a
+		INNER JOIN sparetime b ON a.id = b.id
+		INNER JOIN teacher c ON b.teacherId = c.teacherId
+		INNER JOIN student d ON a.studentId = d.studentId
+		<where>
+			c.teacherName like '%' #{teacherName} '%'
+		</where>
+		ORDER BY
+			c.teacherId
+	</select>
 	
 	
 </mapper>

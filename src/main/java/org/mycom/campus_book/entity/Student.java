@@ -50,11 +50,12 @@ public class Student {
 	public void setGrade(int grade) {
 		this.grade = grade;
 	}
+	public void setDepId(String depId) {
+		this.depId = depId;
+	}
+	
 	public String getDepId() {
 		return depId;
-	}
-	public void setDepMajId(String depId) {
-		this.depId = depId;
 	}
 	public String getEmailAddress() {
 		return emailAddress;

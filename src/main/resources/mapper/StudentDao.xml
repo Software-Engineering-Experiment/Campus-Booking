@@ -3,6 +3,18 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mycom.campus_book.dao.StudentDao">
+<resultMap id="BaseResultMap" type="org.mycom.campus_book.entity.Student" >                                                                 
+    <id column="studentId" property="studentId" jdbcType="BIGINT" />                                                                              
+    <result column="password" property="password" jdbcType="BIGINT" />                                                             
+    <result column="studentName" property="studentName" jdbcType="VARCHAR" />                                                              
+    <result column="grade" property="grade" jdbcType="INTEGER" />                                                                        
+    <result column="depId" property="depId" jdbcType="CHAR" />  
+    <result column="emailAddress" property="emailAddress" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="CHAR" />                                                                               
+  </resultMap> 
+    <sql id="Base_Column_List" >                                                                                                       
+    studentId, password, studentName, grade, depId, emailAddress, phone                                                                                               
+  </sql>      
 	<select id="queryStudent" resultType="org.mycom.campus_book.entity.Student">
 		SELECT 
 			studentId,
@@ -25,6 +37,29 @@
 			studentId=#{studentId} 
 	</update>
 	
+	<update id="updateStudentDepId">
+		UPDATE student
+		SET depId = #{depId}
+		WHERE
+			studentId=#{studentId} 
+	</update>
+	
+	<update id="updateStudentPhone">
+		UPDATE student
+		SET phone = #{phone}
+		WHERE
+			studentId=#{studentId} 
+	</update>
+	
+	<update id="updateStudentEmail">
+		UPDATE student
+		SET emailAddress = #{emailAddress}
+		WHERE
+			studentId=#{studentId} 
+	</update>
+	
+	
+	
 	<select id="queryByStudentId" resultType="org.mycom.campus_book.entity.Student">
 		SELECT *
 		FROM student
@@ -33,10 +68,42 @@
 	<select id="queryByStudentName" resultType="org.mycom.campus_book.entity.Student">
 		SELECT *
 		FROM student
-		WHERE studentName=#{StudentName}
+		<where>
+			<!-- <if test="name !=null and !&quot;&quot;.equals(name.trim())">  -->
+				and studentName like '%' #{studentName} '%'
+			<!--  </if>   -->
+		</where> 
 	</select>
 	<select id="queryAll" resultType="org.mycom.campus_book.entity.Student">
 		SELECT *
 		FROM student
+		ORDER BY
+			studentId
+		LIMIT #{offset}, #{limit}
 	</select>
+	
+	<delete id="delStudentByStudentId" >
+    	DELETE FROM student WHERE studentId=#{studentId}
+    </delete>
+    
+    <insert id="insert" parameterType="org.mycom.campus_book.entity.Student">
+    <!-- ignore主键冲突,报错 -->
+    INSERT ignore INTO student( `studentId`, `password`, `studentName`, `grade`, `depId`, `emailAddress`, `phone`)
+    VALUES( #{studentId}, #{password}, #{studentName},#{grade},#{depId},#{emailAddress},#{phone})
+ 	 </insert>
+ 	 
+ 	 <update id="update" parameterType="org.mycom.campus_book.entity.Student" >                                                      
+    update student                                                                                                                    
+    set password = #{password},                                                                                    
+      studentName = #{studentName},                                                                                       
+      grade = #{grade},                                                                                                 
+      depId = #{depId},
+      emailAddress = #{emailAddress},
+      phone = #{phone}                                                                                                   
+    where studentId = #{studentId}                                                                                             
+  	</update>
+  	
+  	  <select id="findUserObject" resultType="map">
+      select * from student
+ 	</select>  
 </mapper>

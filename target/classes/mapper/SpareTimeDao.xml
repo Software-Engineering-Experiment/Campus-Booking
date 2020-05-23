@@ -52,6 +52,22 @@
 		LIMIT #{offset}, #{limit}
 	</select>
 	
+	<select id="queryByTeacherId" parameterType="long" resultType="org.mycom.campus_book.entity.SpareTime">
+		SELECT 
+			id,
+			teacherId,
+			teacherName,
+			startTime,
+			endTime,
+			maxReserved,
+			reserved
+		FROM
+			sparetime
+		WHERE
+			teacherId=#{teacherId}		
+	</select>
+	
+	
 	<!--什么时候增加失败？reserved>maxReserved -->
 	<update id="addReserved">
 		UPDATE sparetime
@@ -79,17 +95,23 @@
     	DELETE FROM sparetime WHERE id=#{id}
     </delete>
     
-    <update id="updateSpareTime" parameterType="org.mycom.campus_book.entity.SpareTime">
-    	UPDATE sparetime
-    	SET teacherId=#{teacherId},
-		teacherName=#{teacherName},
-		startTime=#{startTime},
-		endTime=#{endTime},
-		maxReserved=#{maxReserved},
-		reserved=#{reserved}
-		WHERE
-		id=#{id}			
-    </update>
+	<delete id="delSpareTimeByTeacherId" >
+    	DELETE FROM sparetime WHERE teacherId=#{teacherId}
+    </delete>
 	
-
+	<select id="getIdListByTeacherId" resultType="Long">
+		SELECT
+			id
+		FROM
+			spareTime
+		WHERE
+		    teacherId=#{teacherId}
+	</select>
+	
+	<select id="queryOvertimeSpareTimeId" resultType="org.mycom.campus_book.entity.SpareTime">
+    	SELECT *
+    	FROM sparetime
+    	WHERE DATEDIFF(NOW(),DATE(startTime))>=1
+    	</select>
+	
 </mapper>

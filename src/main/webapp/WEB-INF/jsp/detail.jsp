@@ -133,7 +133,7 @@ var spareTimeBook={
             id:${spareTime.id},
             studentId:<%=studentId%>
        
-        });
+        })
     })
 </script>
 
