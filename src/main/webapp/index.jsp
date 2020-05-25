@@ -35,7 +35,21 @@
 			<div class="login-top">
 				登录
 			</div>
+			<form role="form	">
+            	<div class="login-center">
+                	<label class="radio-inline">
+                    	<input type="radio"  value="1" name="identity">学生
+                	</label>
+                	<label class="radio-inline">
+                    	<input type="radio"  value="2" name="identity">教师
+                	</label>
+                	<label class="radio-inline">
+                    	<input type="radio"  value="3" name="identity">管理员
+                	</label>
+            	</div>
+        		</form>
 			<div class="login-center clearfix">
+			
 				<div class="login-center-img"><img src="<%=appPath %>/resources/img/name.png"/></div>
 				<div class="login-center-input">
 					<input type="text" 	name="studentId" id="studentIdKey"  placeholder="请输入您的用户名" onfocus="this.placeholder=''" onblur="this.placeholder='请输入您的用户名'"/>
@@ -90,7 +104,7 @@ var spareTimeBook={
 			  }
 			},
 			 
-		remove:function(ele, cls) {
+		removeClass:function(ele, cls) {
 			  if (spareTimeBook.hasClass(ele, cls)) {
 			    var newClass = ' ' + ele.className.replace(/[\t\r\n]/g, '') + ' ';
 			    while (newClass.indexOf(' ' + cls + ' ') >= 0) {
@@ -101,9 +115,10 @@ var spareTimeBook={
 			},
 
 			
-		//验证学号和密码
-		validateStudent:function(studentId,password){
-			console.log("studentId:"+studentId);
+		//验证账号和密码
+		validate:function(identity,studentId,password){
+			console.log("用户身份:1学生2老师3管理员："+identity);
+			console.log("id:"+studentId);
 			if(!studentId||!password){
 				return "nothing";
 			}else if(isNaN(studentId)||password.length!=6 ||isNaN(password)){
@@ -111,7 +126,7 @@ var spareTimeBook={
 			//else if(studentId.length!=10 ||isNaN(studentId)||password.length!=6 ||isNaN(password)){
 			}else {
 				console.log("进入verifywithdatabase");
-				if(spareTimeBook.verifyWithDatabase(studentId, password)){
+				if(spareTimeBook.verifyWithDatabase(identity,studentId, password)){
 					console.log("验证成功！");
 					return "success";
 				}else{
@@ -121,12 +136,15 @@ var spareTimeBook={
 			}  
 		},
 		//将学号和用户名与数据库匹配
-		verifyWithDatabase:function(studentId,password){
+		verifyWithDatabase:function(identity,studentId,password){
 			console.log("成功进入verifywithdatabase!");
 			var result=false;
 			var params={};
 			params.studentId=studentId;
 			params.password=password;
+			params.identity=identity;
+			console.log("params.identity:"+params.identity);
+			console.log("params.id:"+params.studentId);
 			console.log("params.password:"+params.password);
 			var verifyUrl=spareTimeBook.URL.verify();
 			
@@ -158,22 +176,23 @@ var spareTimeBook={
 			init:function(){
 				console.log("我是js文件！");
 					$('#studentBtn').click(function (){
-						
+						var identity=$("input[name='identity']:checked").val();
+						console.log("identity:"+identity);
 						var studentId=$('#studentIdKey').val();
 							console.log("studentId:"+studentId);
 						var password=$('#passwordKey').val();
 							console.log("password:"+password);
-						//调用validateStudent函数验证用户id和密码。
-						var temp=spareTimeBook.validateStudent(studentId,password);
+						//调用validate函数验证用户id和密码。
+						var temp=spareTimeBook.validate(identity,studentId,password);
 						console.log("temp的值");
 						console.log(temp);
 						if(temp=="nothing"){
-							$('#studentMessage').hide().html('<label class="label label-danger">学号或密码为空!</label>').show(300);
+							$('#studentMessage').hide().html('<label class="label label-danger">账号或密码为空!</label>').show(300);
 						}else if(temp=="typerror"){
-							$('#studentMessage').hide().html('<label class="label label-danger">格式不正确!</label>').show(300);
+							$('#studentMessage').hide().html('<label class="label label-danger">格式不正确!密码应该为6位</label>').show(300);
 						}else if(temp=="mismatch"){
 							console.log("已经调用验证函数！");
-							$('#studentMessage').hide().html('<label class="label label-danger">学号密码不匹配!</label>').show(300);
+							$('#studentMessage').hide().html('<label class="label label-danger">账号密码不匹配!</label>').show(300);
 						}else if(temp=="success"){
 							$.cookie('studentId', studentId, {  path: '/'}); 
 							console.log("执行动画");
@@ -186,13 +205,20 @@ var spareTimeBook={
 									spareTimeBook.removeClass(document.querySelector(".login"), "active")
 									spareTimeBook.removeClass(document.querySelector(".sk-rotating-plane"), "active")
 									document.querySelector(".login").style.display = "block"									
-								},3000);
+								},8000);
 								console.log("动画执行结束");
 								
-								
+							if(identity == 1){	
 							setTimeout(function(){alert("登陆成功！");window.location.href ="<%=appPath%>/spareTimes/" + studentId + "/list"}, 5000);
-							
+							}
+							else if(identity == 2){
+							setTimeout(function(){alert("登陆成功！");window.location.href ="<%=appPath%>/spareTimes/" + studentId + "/teacherList"}, 5000);	
+							}
+							else if(identity == 3){
+							setTimeout(function(){alert("登陆成功！");window.location.href ="<%=appPath%>/spareTimes/" + studentId + "/adminList"}, 5000);	
+							}
 						}
+							
 					}); 
 				}
 		}	
@@ -203,7 +229,7 @@ var spareTimeBook={
     $(function () {
         //使用EL表达式传入参数
        spareTimeBook.detail.init({          
-        });
+        })
     })
 </script>
 <div style="text-align:center;">

@@ -53,16 +53,16 @@ public class SpareTimeTest extends BaseTest{
 	
 	@Test
 	public void addSpareTime() {
-		 long id = 1;
+			long id = 1;
 		 long teacherId = 8888888;
 		 String teacherName = "小猪";
-		 String startTime = "2020-6-1,15:30";
-		 String endTime = "2020-6-1,16:30";
+		 String startTime = "2020-05-11,15:30";
+		 String endTime = "2020-05-11,16:30";
 		 int maxReserved = 30;
 		 int reserved = 0;
 		 SpareTime spareTime = new SpareTime(id,teacherId,teacherName,startTime,endTime,maxReserved,reserved);
-		 int i = spareTimeDao.addSpareTime(spareTime);
-		 System.out.print("addSpareTime："+ spareTime);		 
+		 int ss = spareTimeDao.addSpareTime(spareTime);
+		
 	}
 	
 	@Test
@@ -73,18 +73,5 @@ public class SpareTimeTest extends BaseTest{
 		System.out.print("delSpareTimeById："+ i + " hello");
 	}
 	
-	@Test
-	public void updateSpareTime() {
-		 long id = 2;
-		 long teacherId = 7777777;
-		 String teacherName = "罗志祥";
-		 String startTime = "2020-6-2,8:30";
-		 String endTime = "2020-6-2,10:30";
-		 int maxReserved = 40;
-		 int reserved = 0;
-		 SpareTime spareTime = new SpareTime(id,teacherId,teacherName,startTime,endTime,maxReserved,reserved);
-		 int i = spareTimeDao.updateSpareTime(spareTime);
-		 System.out.print("updateSpareTime："+ spareTime);		 
-	}
 	
 }
