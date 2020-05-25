@@ -124,7 +124,7 @@ var spareTimeBook={
 			}else if(isNaN(studentId)||password.length!=6 ||isNaN(password)){
 			return "typerror";
 			//else if(studentId.length!=10 ||isNaN(studentId)||password.length!=6 ||isNaN(password)){
-			}else {
+			}else if(identity==1||identity==2||identity==3 ){
 				console.log("进入verifywithdatabase");
 				if(spareTimeBook.verifyWithDatabase(identity,studentId, password)){
 					console.log("验证成功！");
@@ -133,6 +133,8 @@ var spareTimeBook={
 					console.log("验证失败！");
 					return "mismatch";
 				}
+			}else{
+				return "identityError"
 			}  
 		},
 		//将学号和用户名与数据库匹配
@@ -193,6 +195,11 @@ var spareTimeBook={
 						}else if(temp=="mismatch"){
 							console.log("已经调用验证函数！");
 							$('#studentMessage').hide().html('<label class="label label-danger">账号密码不匹配!</label>').show(300);
+<<<<<<< HEAD
+=======
+						}else if(temp=="identityError"){
+							$('#studentMessage').hide().html('<label class="label label-danger">未选择身份!</label>').show(300);
+>>>>>>> 56ee75a4cc261e5d32c192999bdbf7013181da9d
 						}else if(temp=="success"){
 							$.cookie('studentId', studentId, {  path: '/'}); 
 							console.log("执行动画");
